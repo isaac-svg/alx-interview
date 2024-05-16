@@ -16,6 +16,7 @@ status_codes = {
 }
 line_count = 0
 
+
 def print_stats():
     """ Logs the statistics to stdout"""
     print("File size: {}".format(total_size))
@@ -23,12 +24,15 @@ def print_stats():
         if status_codes[code] > 0:
             print("{}: {}".format(code, status_codes[code]))
 
+
 def signal_handler(sig, frame):
     """handles interupts"""
     print_stats()
     sys.exit(0)
 
+
 signal.signal(signal.SIGINT, signal_handler)
+
 
 for line in sys.stdin:
     try:
@@ -42,14 +46,14 @@ for line in sys.stdin:
         protocol = parts[7][:-1]
         status_code = int(parts[8])
         file_size = int(parts[9])
-        
+
         if method != "GET" or protocol != "HTTP/1.1":
             continue
 
         total_size += file_size
         if status_code in status_codes:
             status_codes[status_code] += 1
-        
+
         line_count += 1
         if line_count % 10 == 0:
             print_stats()
